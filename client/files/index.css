@@ -1,3 +1,58 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f5f5dc; /* Beige Farbton */
 }
+
+/* Grundlegendes Layout für den Container */
+.container {
+    display: flex; /* Verwendet Flexbox, um die Kinder nebeneinander anzuordnen */
+    justify-content: space-around; /* Verteilt die Boxen gleichmäßig mit Raum dazwischen */
+    padding: 20px; /* Fügt ein wenig Platz im Container hinzu */
+    background-color: #f5f5dc; /* Setzt die Hintergrundfarbe des Containers */
+    height: calc(100vh - 40px); /* Nimmt die gesamte verfügbare Höhe abzüglich des Paddings */
+    box-sizing: border-box; /* Stellt sicher, dass Padding und Border in der Höhenberechnung enthalten sind */
+}
+
+/* Stil für jede Box */
+.box {
+    flex: 1; /* Jede Box nimmt gleichen Anteil der Breite ein */
+    margin: 10px; /* Abstand zwischen den Boxen */
+    padding: 20px; /* Innenabstand innerhalb der Box */
+    background-color: #f0ead6; /* Almond Farbe für die Box */
+    border: 5px solid black; /* Dünner schwarzer Rahmen */
+    border-radius: 10px; /* Abgerundete Ecken */
+    min-height: 200px; /* Mindesthöhe */
+    flex-grow: 1; /* Erlaubt den Boxen, sich vertikal zu strecken */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        flex-direction: column; /* Stack boxes vertically on smaller screens */
+        height: auto; /* Passt die Höhe automatisch an die gestapelten Boxen an */
+    }
+    .box {
+        margin: 10px 0; /* Adjust margin for vertical stacking */
+    }
+}
+
+/* Stil für Überschriften in den Boxen */
+.box h2 {
+    margin-top: 0; /* Entfernt den oberen Abstand */
+    margin-bottom: 20px; /* Fügt unten einen Abstand hinzu für visuelle Trennung */
+    font-size: 24px; /* Setzt eine passende Schriftgröße */
+    color: #333; /* Dunkle Schriftfarbe für bessere Lesbarkeit */
+    text-align: center; /* Zentriert die Überschrift */
+    border-bottom: 2px solid #666; /* Fügt einen grauen Trennstrich hinzu */
+    padding-bottom: 10px; /* Fügt Abstand unter der Linie hinzu */
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0; /* Reduzierter vertikaler Abstand */
+    background-color: #f4f4f4; /* Hintergrundfarbe */
+    color: #333; /* Textfarbe */
+    width: 100%;
+    box-shadow: 0 -1px 3px rgba(0,0,0,0.1); /* Leichter Schatten für einen subtilen erhöhten Effekt */
+}
+
