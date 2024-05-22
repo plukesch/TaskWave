@@ -56,3 +56,15 @@ footer {
     box-shadow: 0 -1px 3px rgba(0,0,0,0.1); /* Leichter Schatten für einen subtilen erhöhten Effekt */
 }
 
+#addTodo {
+    font-size: 24px; /* Größe des Plus-Symbols */
+    cursor: pointer; /* Cursor ändern, um Interaktivität zu signalisieren */
+    background: none;
+    border: none;
+    color: #333; /* Farbe des Plus-Symbols */
+}
+
+#todo-list {
+    list-style-type: none; /* Entfernt Bullet Points */
+    padding: 0;
+}
