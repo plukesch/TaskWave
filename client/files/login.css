@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5dc; /* Beige Farbton */
+}
+
+.login-container {
+    background-color: #f5f5f5; /* Hellgrauer Hintergrund */
+    width: 300px; /* Breite des Formular-Containers */
+    padding: 20px; /* Gleichmäßiges Padding um das gesamte Formular */
+    border-radius: 10px; /* Abgerundete Ecken */
+    border: 1px solid #ccc; /* Dünner grauer Rand */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Leichter Schatten für Tiefe */
+    position: absolute;
+    top: 50%; /* Zentriert vertikal */
+    left: 50%; /* Zentriert horizontal */
+    transform: translate(-50%, -50%); /* Verschiebung um die eigene Breite und Höhe */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.login-container h1 {
+    margin-bottom: 20px;
+}
+
+.login-container input {
+    width: calc(100% - 20px); /* Nutzt die volle Breite abzüglich des Paddings */
+    padding: 10px;
+    margin-bottom: 10px; /* Abstand zwischen den Feldern */
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Leicht abgerundete Ecken für die Eingabefelder */
+    margin-right: 100px;
+}
+
+.login-container button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #0056b3;
+}
