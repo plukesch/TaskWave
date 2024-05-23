@@ -46,3 +46,30 @@ body {
 .login-container button:hover {
     background-color: #0056b3;
 }
+
+footer {
+    text-align: center;
+    padding: 10px 0; /* Reduzierter vertikaler Abstand */
+    background-color: #f4f4f4; /* Hintergrundfarbe */
+    color: #333; /* Textfarbe */
+    width: 100%;
+    box-shadow: 0 -1px 3px rgba(0,0,0,0.1); /* Leichter Schatten für einen subtilen erhöhten Effekt */
+}
+
+/* Für Footer Formatierung, damit am Ende angezeigt wird */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;  /* Nimmt verfügbaren Raum ein */
+}
+/* Footer Formatierung Ende */
