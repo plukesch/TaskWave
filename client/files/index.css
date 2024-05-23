@@ -81,4 +81,37 @@ footer {
     cursor: pointer;
 }
 
+.menu-bar {
+    display: flex;
+    align-items: center;
+    background-color: #f0ead6; /* Hintergrundfarbe der Menüleiste */
+    padding: 10px 20px; /* Innenabstand */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optionaler Schatten für Tiefe */
+}
+
+.menu-icon {
+    width: 40px; /* oder eine andere passende Größe */
+    height: auto;
+    margin-right: 15px; /* Abstand zwischen Icon und Titel */
+}
+
+.menu-title {
+    font-size: 24px; /* Anpassen nach Bedarf */
+    font-weight: bold;
+    color: #333; /* Dunkle Schriftfarbe für Kontrast */
+    margin-right: auto; /* Schiebt alle nachfolgenden Elemente nach rechts */
+}
+
+.menu-bar button {
+    background-color: #007BFF; /* Blaue Button-Farbe */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.menu-bar button:hover {
+    background-color: #0056b3; /* Dunklerer Blauton beim Hover */
+}
 
