@@ -9,28 +9,58 @@
 <body>
 
     <div class="content-wrapper">
-
         <div class="login-box">
             <h2>Registration</h2>
-            <input type="email" placeholder="Email" required>
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-            <input type="password" placeholder="Repeat Password" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="repeat-password" placeholder="Repeat Password" required>
             <label>
                 <input type="checkbox"> News per Email
             </label>
             <div class="buttons">
-                <button type="button">Register</button>
+                <button type="button" onclick="register()">Register</button>
                 <button type="button" onclick="location.href='login.html'">Switch to Login</button>
             </div>
         </div>
-
     </div>
 
+    <script>
+    function register() {
+        var password = document.getElementById('password').value;
+        var repeatPassword = document.getElementById('repeat-password').value;
+
+        if (password !== repeatPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        var data = {
+            email: document.getElementById('email').value,
+            username: document.getElementById('username').value,
+            password: password
+        };
+
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Success: ' + data.message);
+            window.location.href = '/login.html'; // Redirect to login page on successful registration
+        })
+        .catch((error) => {
+            alert('Error: ' + error.message);
+        });
+    }
+    </script>
+
+    <footer>
+        © Noah Pieler, Patrick Lukesch
+    </footer>
 </body>
-
-<footer>
-    © Noah Pieler, Patrick Lukesch
-</footer>
-
 </html>
