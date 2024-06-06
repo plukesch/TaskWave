@@ -1,6 +1,41 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5dc; /* Beige Farbton */
+    color: #333; /* Dunkle Schriftfarbe für Kontrast */
+}
+
+.intro, .mission, .team, .story, .future-goals {
+    padding: 20px;
+    margin: 20px 0;
+    background-color: #f0ead6; /* Almond Farbe für Abschnitte */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    border-bottom: 2px solid #666; /* Fügt eine Trennlinie unter den Überschriften hinzu */
+    padding-bottom: 10px;
+}
+
+.team-members {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.team-member {
+    flex: 1;
+    max-width: 200px;
+    margin: 10px;
+    text-align: center;
+}
+
+.team-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
 }
 
 .navigation-buttons {

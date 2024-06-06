@@ -115,6 +115,32 @@ footer {
     background-color: #0056b3; /* Dunklerer Blauton beim Hover */
 }
 
+/* Drop zone styling */
+.dropzone {
+    border: 2px dashed #999;
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 100px;
+    position: relative;
+}
+
+/* Highlight drop zone when dragging over */
+.dropzone.dragover {
+    border-color: #333;
+    background-color: #f9f9f9;
+}
+
+/* Task item styling */
+.dropzone li {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: move;
+}
+
+
 /* Für Footer Formatierung, damit am Ende angezeigt wird */
 html, body {
     height: 100%;

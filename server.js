@@ -1,38 +1,31 @@
-/*const express = require('express');
-const app = express();
-const path = require('path');
-
-// Stellt sicher, dass der Pfad zum Ordner korrekt ist
-app.use(express.static(path.join(__dirname, 'client', 'files')));
-
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server läuft auf http://localhost:${PORT}/`);
-});*/
-
+// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const authRouter = require('./authRoutes'); // Importiert die Authentifizierungs-Routen
+const authRouter = require('./authRoutes');
+const taskRouter = require('./taskRoutes'); // Import the task routes
 
 const app = express();
-app.use(express.json()); // Erlaubt das Parsen von JSON im Body von Requests
-app.use('/api', authRouter); // Nutzt authRouter für alle Pfade unter '/api'
-app.use(express.static(path.join(__dirname, 'client/files'))); // Statische Dateien aus dem 'public'-Ordner bedienen
+app.use(express.json()); // Allow parsing JSON in request bodies
+app.use('/api', authRouter); // Use authRouter for all paths under '/api'
+app.use('/api', taskRouter); // Use taskRouter for all paths under '/api/tasks'
+app.use(express.static(path.join(__dirname, 'client/files'))); // Serve static files from the 'client/files' directory
 
-// Verbindung zu MongoDB
-mongoose.connect('mongodb+srv://plukesch:mongokuhl3@taskwave.hbjnlqc.mongodb.net/?retryWrites=true&w=majority&appName=TaskWave').then(() => {
+// Connect to MongoDB
+mongoose.connect('mongodb+srv://plukesch:mongokuhl3@taskwave.hbjnlqc.mongodb.net/?retryWrites=true&w=majority&appName=TaskWave')
+  .then(() => {
     console.log('MongoDB connected');
-}).catch(err => {
+  })
+  .catch(err => {
     console.error('Database connection error:', err);
-});
+  });
 
-// Basisroute für die Startseite
+// Route for the homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/files/index.html'));
 });
 
-// Spezifische Routen für Login und Registrierung
+// Routes for login and registration
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/files/login.html'));
 });
@@ -41,7 +34,7 @@ app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/files/registration.html'));
 });
 
-// Server-Konfiguration
+// Server configuration
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
