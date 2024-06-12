@@ -1,5 +1,3 @@
-//console.log('TaskWave geladen');
-
 // index.js
 
 document.addEventListener('DOMContentLoaded', loadTasks);
@@ -72,21 +70,7 @@ function loadTasks() {
             const doneList = document.getElementById('done-list');
 
             tasks.forEach(task => {
-                const li = document.createElement('li');
-                li.textContent = task.title;
-                li.setAttribute('data-id', task._id);
-                enableDrag(li);
-
-                switch (task.status) {
-                    case 'In Progress':
-                        inProgressList.appendChild(li);
-                        break;
-                    case 'Done':
-                        doneList.appendChild(li);
-                        break;
-                    default:
-                        todoList.appendChild(li);
-                }
+                addTask(task, todoList, inProgressList, doneList);
             });
             setupDropZones();
         })
@@ -121,11 +105,7 @@ function addInputField() {
                 })
                 .then(response => response.json())
                 .then(task => {
-                    const li = document.createElement('li');
-                    li.textContent = task.title;
-                    li.setAttribute('data-id', task._id);
-                    enableDrag(li);
-                    document.getElementById('todo-list').insertBefore(li, input.nextSibling);
+                    addTask(task, document.getElementById('todo-list'), null, null);
                     input.remove(); // Remove input field after adding task
                 })
                 .catch(error => {
@@ -136,5 +116,51 @@ function addInputField() {
     }
 }
 
+function addTask(task, todoList, inProgressList, doneList) {
+    const li = document.createElement('li');
+    li.textContent = task.title;
+    li.setAttribute('data-id', task._id); // Setzen der data-id
+    enableDrag(li);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() { deleteTask(task._id, li); }; // Nutzung der _id beim Aufruf von deleteTask
+    li.appendChild(deleteButton);
+
+    switch (task.status) {
+        case 'In Progress':
+            inProgressList.appendChild(li);
+            break;
+        case 'Done':
+            doneList.appendChild(li);
+            break;
+        default:
+            todoList.appendChild(li);
+    }
+}
 
 
+function deleteTask(taskId, liElement) {
+    fetch(`/api/tasks/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        if (!response.ok) { // Verarbeitet sowohl 404 als auch 500 Fehler korrekt.
+            throw new Error('Failed to delete task');
+        }
+        liElement.remove(); // Entfernt das Listenelement, wenn der Server den Löschvorgang bestätigt
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error deleting task: ' + error.message); // Zeigt einen Fehlerdialog an, falls etwas schiefgeht
+    });
+}
+
+
+deleteButton.onclick = function() {
+    console.log("Deleting task with ID:", task._id); // Zum Debuggen, um die ID zu sehen
+    deleteTask(task._id, li);
+};
