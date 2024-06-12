@@ -76,3 +76,49 @@ body {
     flex: 1;  /* Nimmt verfügbaren Raum ein */
 }
 /* Footer Formatierung Ende */
+
+/* Pop Up WIndow STart */
+
+/* Pop-up Fenster Stile */
+.modal {
+    display: none; /* Versteckt das Pop-up, bis es benötigt wird */
+    position: fixed; /* Bleibt an der Stelle, auch beim Scrollen */
+    z-index: 1; /* Sorgt dafür, dass das Pop-up über anderen Elementen liegt */
+    left: 0;
+    top: 0;
+    width: 100%; /* Volle Breite */
+    height: 100%; /* Volle Höhe */
+    overflow: auto; /* Ermöglicht das Scrollen, falls nötig */
+    background-color: rgba(0,0,0,0.4); /* Dimmt den Hintergrund */
+}
+
+/* Pop-up Inhalt Stile */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto; /* Zentriert das Pop-up vertikal und horizontal */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Breite des Pop-ups */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Button Stile */
+.close-button {
+    color: white;
+    padding: 10px 20px;
+    background-color: #007BFF; /* Blaue Hintergrundfarbe */
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.close-button:hover {
+    background-color: #0056b3; /* Dunklerer Blauton beim Überfahren */
+}
+
+/* Pop Up WIndow Ende */

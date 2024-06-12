@@ -26,41 +26,59 @@
     </div>
 
     <script>
-    function register() {
-        var password = document.getElementById('password').value;
-        var repeatPassword = document.getElementById('repeat-password').value;
+        function register() {
+            var data = {
+                email: document.getElementById('email').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
 
-        if (password !== repeatPassword) {
-            alert('Passwords do not match');
-            return;
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                showModal(data.message);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showModal('An error occurred. Please try again.');
+            });
         }
 
-        var data = {
-            email: document.getElementById('email').value,
-            username: document.getElementById('username').value,
-            password: password
-        };
+        function showModal(message) {
+            document.getElementById('modal-text').innerText = message;
+            document.getElementById('myModal').style.display = "block";
+        }
 
-        fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('Success: ' + data.message);
-            window.location.href = '/login.html'; // Redirect to login page on successful registration
-        })
-        .catch((error) => {
-            alert('Error: ' + error.message);
-        });
-    }
-    </script>
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+            if (document.getElementById('modal-text').innerText === "User created successfully") {
+                window.location.href = 'login.html'; // Weiterleitung zur Login-Seite bei erfolgreicher Registrierung
+            }
+        }
+        </script>
+        
+        
+        
+        
 
     <footer>
         © Noah Pieler, Patrick Lukesch
     </footer>
+
+    <!-- Einheitliches Modal/Pop-up Fenster -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p id="modal-text"></p> <!-- Text wird dynamisch geändert -->
+        <button class="close-button" onclick="closeModal()">Ok</button>
+    </div>
+</div>
+
+
 </body>
 </html>

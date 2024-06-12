@@ -4,9 +4,14 @@ const User = require('./models/user');
 const bcrypt = require('bcryptjs');
 
 // Register User
+// authRoutes.js
 router.post('/register', async (req, res) => {
     const { email, username, password } = req.body;
     try {
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+        if (existingUser) {
+            return res.status(409).json({ message: "User already exists" });
+        }
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ email, username, password: hashedPassword });
         await newUser.save();
@@ -15,6 +20,7 @@ router.post('/register', async (req, res) => {
         res.status(500).json({ message: "Error registering new user" });
     }
 });
+
 
 // Login User
 router.post('/login', async (req, res) => {
