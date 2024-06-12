@@ -118,13 +118,26 @@ function addInputField() {
 
 function addTask(task, todoList, inProgressList, doneList) {
     const li = document.createElement('li');
-    li.textContent = task.title;
-    li.setAttribute('data-id', task._id); // Setzen der data-id
+    li.setAttribute('data-id', task._id);
     enableDrag(li);
+
+    const taskText = document.createElement('span');
+    taskText.textContent = task.title;
+    li.appendChild(taskText);
+
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.onclick = () => editTask(task._id, taskText);
+    li.appendChild(editButton);
+
+    const highlightButton = document.createElement('button');
+    highlightButton.textContent = '!';
+    highlightButton.onclick = () => toggleHighlight(taskText);
+    li.appendChild(highlightButton);
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
-    deleteButton.onclick = function() { deleteTask(task._id, li); }; // Nutzung der _id beim Aufruf von deleteTask
+    deleteButton.onclick = function() { deleteTask(task._id, li); };
     li.appendChild(deleteButton);
 
     switch (task.status) {
@@ -138,6 +151,61 @@ function addTask(task, todoList, inProgressList, doneList) {
             todoList.appendChild(li);
     }
 }
+
+function editTask(taskId, element) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = element.textContent;
+    element.parentNode.replaceChild(input, element);
+    input.focus();
+
+    // Sobald der Benutzer die Eingabe beendet, wird `updateTask` aufgerufen
+    input.onblur = () => updateTask(taskId, input.value, input);
+    input.onkeypress = (event) => {
+        if (event.key === 'Enter') {
+            input.blur(); // Löst `onblur` aus, das das Update ausführt
+        }
+    };
+}
+
+
+function toggleHighlight(element) {
+    element.style.color = element.style.color === 'red' ? '' : 'red'; // Toggle Farbe zwischen rot und Standard
+}
+
+function updateTask(taskId, newTitle, input) {
+    fetch(`/api/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: newTitle })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update task');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const newSpan = document.createElement('span');
+        newSpan.textContent = newTitle;
+        newSpan.ondblclick = () => editTask(taskId, newSpan);
+
+        // Setze den Highlight-Button neu und stelle sicher, dass er funktioniert
+        const highlightButton = input.nextElementSibling.nextElementSibling; // "!" Button
+        highlightButton.onclick = () => toggleHighlight(newSpan); // Neuzuweisung des Event-Listeners
+
+        input.parentNode.replaceChild(newSpan, input);
+    })
+    .catch(error => {
+        console.error('Error updating task:', error);
+        alert('Error updating task: ' + error.message);
+        input.parentNode.replaceChild(element, input);
+    });
+}
+
+
 
 
 function deleteTask(taskId, liElement) {
@@ -158,9 +226,3 @@ function deleteTask(taskId, liElement) {
         alert('Error deleting task: ' + error.message); // Zeigt einen Fehlerdialog an, falls etwas schiefgeht
     });
 }
-
-
-deleteButton.onclick = function() {
-    console.log("Deleting task with ID:", task._id); // Zum Debuggen, um die ID zu sehen
-    deleteTask(task._id, li);
-};

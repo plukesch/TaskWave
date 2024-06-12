@@ -169,9 +169,39 @@ body {
     cursor: pointer;
 }
 
-.task-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
+/* Stil für alle Buttons im Task-Container */
+.task-item button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    outline: none;
 }
+
+.task-item button:hover {
+    background-color: #0056b3;
+}
+
+/* Stil für den Text, der bearbeitet oder hervorgehoben werden kann */
+.task-item span {
+    margin-right: 10px;
+}
+
+/* Spezieller Stil für hervorgehobenen Text */
+.highlighted {
+    color: red; /* Rote Textfarbe für hervorgehobene Tasks */
+}
+
+/* Grundlegende Stile für die Texteingabe beim Bearbeiten */
+.task-item input[type="text"] {
+    padding: 3px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
 

@@ -26,7 +26,7 @@ router.get('/tasks', async (req, res) => {
 });
 
 // Update task status
-router.put('/tasks/:id', async (req, res) => {
+/*router.put('/tasks/:id', async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     try {
@@ -35,7 +35,22 @@ router.put('/tasks/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error updating task" });
     }
+});*/
+
+router.put('/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body; // Stelle sicher, dass du den Titel aus dem Body extrahierst
+  try {
+      const task = await Task.findByIdAndUpdate(id, { title }, { new: true });
+      if (!task) {
+          return res.status(404).json({ message: 'Task not found' });
+      }
+      res.json(task);
+  } catch (error) {
+      res.status(500).json({ message: "Error updating task" });
+  }
 });
+
 
 
 // Delete a task
