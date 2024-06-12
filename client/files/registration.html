@@ -26,44 +26,75 @@
     </div>
 
     <script>
-        function register() {
-            var data = {
-                email: document.getElementById('email').value,
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value
-            };
-
-            fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(data => {
-                showModal(data.message);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                showModal('An error occurred. Please try again.');
-            });
+        function validateEmail(email) {
+            const regex = /^[a-zA-Z0-9]{1,20}@[a-z]{1,8}\.(net|at|org|com)$/;
+            return regex.test(email);
         }
-
+        
+        function validateUsername(username) {
+            const regex = /^[a-zA-Z]{1,10}$/;
+            return regex.test(username);
+        }
+        
+        function validatePassword(password) {
+            const regex = /^(?=.*[a-z])(?=.*\d)(?=.*\W).{8,}$/i;
+            return regex.test(password);
+        }
+        
+        function register() {
+            const email = document.getElementById('email');
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            let isValid = true;
+        
+            // Validierung und visuelle Rückmeldung
+            email.style.borderColor = validateEmail(email.value) ? "initial" : "red";
+            username.style.borderColor = validateUsername(username.value) ? "initial" : "red";
+            password.style.borderColor = validatePassword(password.value) ? "initial" : "red";
+        
+            if (!validateEmail(email.value) || !validateUsername(username.value) || !validatePassword(password.value)) {
+                isValid = false;
+                showModal("False input for registration");
+                return; // Stoppt die Ausführung, wenn die Validierung fehlschlägt
+            }
+        
+            if (isValid) {
+                var data = {
+                    email: email.value,
+                    username: username.value,
+                    password: password.value
+                };
+        
+                fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    showModal(data.message);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    showModal('An error occurred. Please try again.');
+                });
+            }
+        }
+        
         function showModal(message) {
             document.getElementById('modal-text').innerText = message;
             document.getElementById('myModal').style.display = "block";
         }
-
+        
         function closeModal() {
             document.getElementById('myModal').style.display = "none";
             if (document.getElementById('modal-text').innerText === "User created successfully") {
-                window.location.href = 'login.html'; // Weiterleitung zur Login-Seite bei erfolgreicher Registrierung
+                window.location.href = 'login.html'; // Weiterleitung zur Login-Seite
             }
         }
         </script>
-        
-        
         
         
 

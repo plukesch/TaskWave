@@ -18,36 +18,55 @@
     </div>
 
     <script>
-    function login() {
-        var data = {
-            username: document.getElementById('username').value,
-            password: document.getElementById('password').value
-        };
-
-        fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === "Login successful") {
-                alert('Success: ' + data.message);
-                window.location.href = '/'; // Redirect to home page on successful login
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch((error) => {
-            alert('Error: ' + error.message);
-        });
-    }
-    </script>
+        function login() {
+            var data = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
+    
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Login successful") {
+                    window.location.href = '/'; // Weiterleitung zur Hauptseite
+                } else {
+                    showModal(data.message); // Zeigt die Fehlermeldung im Modal an
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showModal('An error occurred. Please try again.');
+            });
+        }
+    
+        function showModal(message) {
+            document.getElementById('modal-text').innerText = message;
+            document.getElementById('myModal').style.display = "block";
+        }
+    
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
+        </script>
+        
 
     <footer>
         © Noah Pieler, Patrick Lukesch
     </footer>
+
+    <!-- Modal/Pop-up Fenster -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="modal-text"></p>
+            <button class="close-button" onclick="closeModal()">Ok</button>
+        </div>
+    </div>
+
 </body>
 </html>

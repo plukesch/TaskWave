@@ -4,9 +4,12 @@ const User = require('./models/user');
 const bcrypt = require('bcryptjs');
 
 // Register User
-// authRoutes.js
 router.post('/register', async (req, res) => {
     const { email, username, password } = req.body;
+    if (!validateEmail(email) || !validateUsername(username) || !validatePassword(password)) {
+        return res.status(400).json({ message: "False input for registration" });
+    }
+    
     try {
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
@@ -21,20 +24,37 @@ router.post('/register', async (req, res) => {
     }
 });
 
+function validateEmail(email) {
+    return /^[a-zA-Z0-9]{1,20}@[a-z]{1,8}\.(net|at|org|com)$/.test(email);
+}
+
+function validateUsername(username) {
+    return /^[a-zA-Z]{1,10}$/.test(username);
+}
+
+function validatePassword(password) {
+    return /^(?=.*[a-z])(?=.*\d)(?=.*\W).{8,}$/.test(password);
+}
+
 
 // Login User
+// authRoutes.js
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username });
-        if (user && await bcrypt.compare(password, user.password)) {
-            res.json({ message: "Login successful" });
-        } else {
-            res.status(400).json({ message: "Invalid credentials" });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+        res.json({ message: "Login successful" });
     } catch (error) {
         res.status(500).json({ message: "Error logging in" });
     }
 });
+
 
 module.exports = router;
