@@ -34,9 +34,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message === "Login successful") {
-                    window.location.href = '/'; // Weiterleitung zur Hauptseite
+                    localStorage.setItem('token', data.token); // Store the token
+                    window.location.href = '/'; // Redirect to the main page
                 } else {
-                    showModal(data.message); // Zeigt die Fehlermeldung im Modal an
+                    showModal(data.message);
                 }
             })
             .catch((error) => {
@@ -53,7 +54,8 @@
         function closeModal() {
             document.getElementById('myModal').style.display = "none";
         }
-        </script>
+    </script>
+    
         
 
     <footer>

@@ -62,22 +62,45 @@ function updateTaskStatus(taskId, newStatusId) {
 }
 
 function loadTasks() {
-    fetch('/api/tasks')
-        .then(response => response.json())
-        .then(tasks => {
-            const todoList = document.getElementById('todo-list');
-            const inProgressList = document.getElementById('in-progress-list');
-            const doneList = document.getElementById('done-list');
+    const token = localStorage.getItem('token'); // Retrieve token here
+    if (!token) {
+        alert('You must be logged in to view tasks');
+        window.location.href = '/login';
+        return;
+    }
 
-            tasks.forEach(task => {
-                addTask(task, todoList, inProgressList, doneList);
+    fetch('http://localhost:4000/api/tasks', {
+        headers: {
+            'Authorization': `Bearer ${token}`, // Include token here
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.headers.get('content-type').includes('text/html')) {
+            // If the response is HTML, log it to the console
+            return response.text().then(text => {
+                console.error('Error response as HTML:', text);
+                throw new Error('Expected JSON but received HTML');
             });
-            setupDropZones();
-        })
-        .catch(error => {
-            console.error('Error loading tasks:', error);
+        }
+        return response.json();
+    })
+    .then(tasks => {
+        console.log(tasks);
+        const todoList = document.getElementById('todo-list');
+        const inProgressList = document.getElementById('in-progress-list');
+        const doneList = document.getElementById('done-list');
+
+        tasks.forEach(task => {
+            addTask(task, todoList, inProgressList, doneList);
         });
+        setupDropZones();
+    })
+    .catch(error => {
+        console.error('Error loading tasks:', error);
+    });
 }
+
 
 document.getElementById('addTodo').addEventListener('click', function() {
     addInputField();
@@ -96,14 +119,22 @@ function addInputField() {
         input.addEventListener('keypress', function(event) {
             if (event.key === 'Enter' && input.value.trim() !== '') {
                 const title = input.value;
+                const token = localStorage.getItem('token'); // Retrieve token here
+
                 fetch('/api/tasks', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // Include token here
                     },
                     body: JSON.stringify({ title }),
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to add task');
+                    }
+                    return response.json();
+                })
                 .then(task => {
                     addTask(task, document.getElementById('todo-list'), null, null);
                     input.remove(); // Remove input field after adding task
@@ -174,10 +205,13 @@ function toggleHighlight(element) {
 }
 
 function updateTask(taskId, newTitle, input) {
+    const token = localStorage.getItem('token'); // Retrieve token here
+
     fetch(`/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Include token here
         },
         body: JSON.stringify({ title: newTitle })
     })
@@ -192,9 +226,8 @@ function updateTask(taskId, newTitle, input) {
         newSpan.textContent = newTitle;
         newSpan.ondblclick = () => editTask(taskId, newSpan);
 
-        // Setze den Highlight-Button neu und stelle sicher, dass er funktioniert
-        const highlightButton = input.nextElementSibling.nextElementSibling; // "!" Button
-        highlightButton.onclick = () => toggleHighlight(newSpan); // Neuzuweisung des Event-Listeners
+        const highlightButton = input.nextElementSibling.nextElementSibling;
+        highlightButton.onclick = () => toggleHighlight(newSpan);
 
         input.parentNode.replaceChild(newSpan, input);
     })
@@ -206,23 +239,64 @@ function updateTask(taskId, newTitle, input) {
 }
 
 
+function fetchTasks() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('You must be logged in to view tasks');
+        window.location.href = '/login';
+        return;
+    }
 
+    fetch('/api/tasks', {
+        headers: {
+            'Authorization': `Bearer ${token}` // Include token here
+        }
+    })
+    .then(response => response.json())
+    .then(tasks => {
+        const todoList = document.getElementById('todo-list');
+        const inProgressList = document.getElementById('in-progress-list');
+        const doneList = document.getElementById('done-list');
+
+        tasks.forEach(task => {
+            addTask(task, todoList, inProgressList, doneList);
+        });
+        setupDropZones();
+    })
+    .catch(error => {
+        console.error('Error fetching tasks:', error);
+    });
+}
 
 function deleteTask(taskId, liElement) {
+    const token = localStorage.getItem('token'); // Retrieve token here
+
     fetch(`/api/tasks/${taskId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Include token here
         }
     })
     .then(response => {
-        if (!response.ok) { // Verarbeitet sowohl 404 als auch 500 Fehler korrekt.
+        if (!response.ok) {
             throw new Error('Failed to delete task');
         }
-        liElement.remove(); // Entfernt das Listenelement, wenn der Server den Löschvorgang bestätigt
+        liElement.remove();
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Error deleting task: ' + error.message); // Zeigt einen Fehlerdialog an, falls etwas schiefgeht
+        console.error('Error deleting task:', error);
+        alert('Error deleting task: ' + error.message);
     });
 }
+
+function logout() {
+    localStorage.removeItem('token'); // Remove the token from localStorage
+    window.location.href = '/login'; // Redirect to login page
+}
+
+
+
+document.addEventListener('DOMContentLoaded', fetchTasks);
+
+
