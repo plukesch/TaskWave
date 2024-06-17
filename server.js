@@ -14,8 +14,9 @@ app.use(express.json()); // Allow parsing JSON in request bodies
 const PORT = process.env.PORT || 4000;
 
 // Use routers
-app.use('/api', authRouter);
-app.use('/api/tasks', authenticateToken, taskRouter); // Protect task routes
+app.use('/api/auth', authRouter); // Assuming you have auth routes
+app.use('/api/tasks', taskRouter); // Use taskRouter for /api/tasks routes
+
 
 // Serve static files from the 'client/files' directory
 app.use(express.static(path.join(__dirname, 'client/files'))); 
