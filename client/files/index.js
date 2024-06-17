@@ -63,13 +63,14 @@ function updateTaskStatus(taskId, newStatusId) {
 
 function loadTasks() {
     const token = localStorage.getItem('token'); // Retrieve token here
+    console.log(token);
     if (!token) {
         alert('You must be logged in to view tasks');
         window.location.href = '/login';
         return;
     }
 
-    fetch('http://localhost:4000/api/tasks', {
+    fetch('/api/tasks', {
         headers: {
             'Authorization': `Bearer ${token}`, // Include token here
             'Content-Type': 'application/json'
