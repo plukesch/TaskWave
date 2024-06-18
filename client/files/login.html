@@ -35,7 +35,6 @@
             .then(data => {
                 if (data.message === "Login successful") {
                     localStorage.setItem('token', data.token); // Store the token
-                    console.log(localStorage.getItem('token'));
                     window.location.href = '/'; // Redirect to the main page
                 } else {
                     showModal(data.message);

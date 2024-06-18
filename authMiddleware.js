@@ -3,10 +3,8 @@ const secretKey = process.env.JWT_SECRET; // Load secret key from environment va
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
-    console.log(authHeader)
     
     const token = authHeader && authHeader.split(' ')[1];
-    console.log(token)
     if (!token) {
 
         return res.status(401).json({ message: 'No token provided' }); // Unauthorized
@@ -15,7 +13,6 @@ function authenticateToken(req, res, next) {
     try {
         const decoded = jwt.verify(token, secretKey);
         req.user = decoded;
-        console.log(req.user)
         next();
     } catch (ex) {
         return res.status(401).json({ message: 'No token provided' }); // Unauthorized

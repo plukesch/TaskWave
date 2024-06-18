@@ -1,7 +1,5 @@
 // index.js
 
-document.addEventListener('DOMContentLoaded', loadTasks);
-
 function enableDrag(item) {
     item.draggable = true;
     item.addEventListener('dragstart', (event) => {
@@ -59,47 +57,6 @@ function updateTaskStatus(taskId, newStatusId) {
     .then(response => response.json())
     .then(data => console.log("Updated Task:", data))
     .catch(error => console.error('Error updating task status:', error));
-}
-
-function loadTasks() {
-    const token = localStorage.getItem('token'); // Retrieve token here
-    console.log(token);
-    if (!token) {
-        alert('You must be logged in to view tasks');
-        window.location.href = '/login';
-        return;
-    }
-
-    fetch('/api/tasks', {
-        headers: {
-            'Authorization': `Bearer ${token}`, // Include token here
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.headers.get('content-type').includes('text/html')) {
-            // If the response is HTML, log it to the console
-            return response.text().then(text => {
-                console.error('Error response as HTML:', text);
-                throw new Error('Expected JSON but received HTML');
-            });
-        }
-        return response.json();
-    })
-    .then(tasks => {
-        console.log(tasks);
-        const todoList = document.getElementById('todo-list');
-        const inProgressList = document.getElementById('in-progress-list');
-        const doneList = document.getElementById('done-list');
-
-        tasks.forEach(task => {
-            addTask(task, todoList, inProgressList, doneList);
-        });
-        setupDropZones();
-    })
-    .catch(error => {
-        console.error('Error loading tasks:', error);
-    });
 }
 
 
