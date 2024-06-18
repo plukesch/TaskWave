@@ -204,4 +204,25 @@ body {
     border: 1px solid #ccc;
 }
 
+.weather-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weather-container input, .weather-container button {
+    margin: 0 5px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.weather-container img {
+    width: 40px; 
+}
+
+.weather-container div {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
 

@@ -12,6 +12,15 @@
         <div class="menu-bar">
             <img src="../../wave-icon.jpg" alt="Wave Icon" class="menu-icon">
             <span class="menu-title">TaskWave</span>
+            <div class="weather-container" id="weather-display">
+                <input type="text" id="city-input" placeholder="Enter City" aria-label="City name for weather">
+                <button onclick="updateWeather()">Get Weather</button>
+                <img id="weather-icon" src="" alt="Weather Icon">
+                <div>
+                    <span id="temperature"></span>
+                    <span id="description"></span>
+                </div>
+            </div>
             <button onclick="window.location.href='aboutus.html'">About us</button>
         </div>
 
