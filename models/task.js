@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   status: { type: String, default: 'To-Do' } // Possible statuses: 'To-Do', 'In Progress', 'Done'
 });
 

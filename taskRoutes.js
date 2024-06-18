@@ -12,7 +12,10 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     try {
-        const newTask = new Task({ title });
+        const newTask = new Task({
+            title: title,
+            user: req.user.id  
+        });
         await newTask.save();
         res.status(201).json(newTask);
     } catch (error) {
@@ -24,11 +27,10 @@ router.post('/', authenticateToken, async (req, res) => {
 // Get all tasks
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        console.log("hey");
-        const tasks = await Task.find();
-        console.log(tasks);
+        const tasks = await Task.find({ user: req.user.id }); // Filter tasks by user ID
         res.json(tasks);
     } catch (error) {
+        console.error('Error fetching tasks:', error);
         res.status(500).json({ message: "Error fetching tasks" });
     }
 });
