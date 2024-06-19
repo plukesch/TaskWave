@@ -1,4 +1,3 @@
-// taskRoutes.js
 const express = require('express');
 const router = express.Router();
 const Task = require('./models/task');
@@ -6,25 +5,48 @@ const authenticateToken = require('./authMiddleware'); // Import your JWT middle
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Task:
+ *       type: object
+ *       required:
+ *         - title
+ *       properties:
+ *         title:
+ *           type: string
+ *         status:
+ *           type: string
+ *           default: 'To-Do'
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
+/**
+ * @swagger
  * /tasks:
  *   post:
  *     summary: Creates a new task.
  *     description: Creates a new task with the given title and status for the authenticated user.
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - title
  *             properties:
  *               title:
  *                 type: string
+ *                 description: Title of the task
+ *                 example: "Finish the report"
  *               status:
  *                 type: string
- *                 default: 'To-Do'
  *                 description: Status of the task, defaults to 'To-Do'
+ *                 example: "In Progress"
  *     responses:
  *       201:
  *         description: Task created successfully.
@@ -56,13 +78,14 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 });
 
-
 /**
  * @swagger
  * /tasks:
  *   get:
  *     summary: Returns a list of tasks.
  *     description: Retrieve a list of tasks based on the current user's context.
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: A list of tasks.
@@ -72,18 +95,6 @@ router.post('/', authenticateToken, async (req, res) => {
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Task'
- * components:
- *   schemas:
- *     Task:
- *       type: object
- *       required:
- *         - title
- *       properties:
- *         title:
- *           type: string
- *         status:
- *           type: string
- *           default: 'To-Do'
  */
 
 // Get all tasks
@@ -97,13 +108,14 @@ router.get('/', authenticateToken, async (req, res) => {
     }
 });
 
-
 /**
  * @swagger
  * /tasks/{taskId}:
  *   put:
  *     summary: Updates a specific task.
  *     description: Updates the task with the specified ID for the authenticated user.
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: taskId
@@ -136,11 +148,11 @@ router.get('/', authenticateToken, async (req, res) => {
  */
 
 // Update a task
-router.put('/:id', authenticateToken, async (req, res) => {
-    const { id } = req.params;
+router.put('/:taskId', authenticateToken, async (req, res) => {
+    const { taskId } = req.params;
     const { title, status } = req.body;
     try {
-        const task = await Task.findByIdAndUpdate(id, { title, status }, { new: true });
+        const task = await Task.findByIdAndUpdate(taskId, { title, status }, { new: true });
         if (!task) {
             return res.status(404).json({ message: 'Task not found' });
         }
@@ -150,13 +162,14 @@ router.put('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-
 /**
  * @swagger
  * /tasks/{taskId}:
  *   delete:
  *     summary: Deletes a specific task.
  *     description: Deletes the task with the specified ID if it belongs to the authenticated user.
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: taskId
@@ -178,11 +191,10 @@ router.delete('/:taskId', authenticateToken, async (req, res) => {
         if (!task) {
             return res.status(404).json({ message: 'Task not found' });
         }
-        res.status(200).json({ message: 'Task deleted successfully' });
+        res.status(204).json({ message: 'Task deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting task' });
     }
 });
 
 module.exports = router;
-

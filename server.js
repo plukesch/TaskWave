@@ -19,21 +19,33 @@ const PORT = process.env.PORT || 4000;
 // Swagger-Konfiguration
 const swaggerOptions = {
   swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'TaskWave API',
-      version: '1.0.0',
-      description: 'API for managing tasks within the TaskWave application',
-      contact: {
-        name: "Developer Support",
-        url: "http://example.com",
-        email: "support@example.com"
-      }
-    },
-    servers: [{
-      url: 'http://localhost:4000/api',
-      description: 'Development server',
-    }],
+      openapi: '3.0.0',
+      info: {
+          title: 'TaskWave API',
+          version: '1.0.0',
+          description: 'API for managing tasks within the TaskWave application',
+          contact: {
+              name: "Developer Support",
+              url: "http://example.com",
+              email: "support@example.com"
+          }
+      },
+      servers: [{
+          url: 'http://localhost:4000/api',
+          description: 'Development server',
+      }],
+      components: {
+          securitySchemes: {
+              BearerAuth: {
+                  type: 'http',
+                  scheme: 'bearer',
+                  bearerFormat: 'JWT',
+              }
+          }
+      },
+      security: [{
+          BearerAuth: []
+      }]
   },
   apis: ['./taskRoutes.js'], // Pfad zu den Route-Dateien
 };
