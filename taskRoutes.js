@@ -4,6 +4,36 @@ const router = express.Router();
 const Task = require('./models/task');
 const authenticateToken = require('./authMiddleware'); // Import your JWT middleware
 
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     summary: Returns a list of tasks.
+ *     description: Retrieve a list of tasks based on the current user's context.
+ *     responses:
+ *       200:
+ *         description: A list of tasks.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ * components:
+ *   schemas:
+ *     Task:
+ *       type: object
+ *       required:
+ *         - title
+ *       properties:
+ *         title:
+ *           type: string
+ *         status:
+ *           type: string
+ *           default: 'To-Do'
+ */
+
+
 // Create a new task
 router.post('/', authenticateToken, async (req, res) => {
     const { title } = req.body;
