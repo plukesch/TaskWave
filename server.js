@@ -35,7 +35,7 @@ const swaggerOptions = {
       description: 'Development server',
     }],
   },
-  apis: ['./taskRoutes/*.js'], // Pfad zu den Route-Dateien
+  apis: ['./taskRoutes.js'], // Pfad zu den Route-Dateien
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);

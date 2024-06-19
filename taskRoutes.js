@@ -7,6 +7,59 @@ const authenticateToken = require('./authMiddleware'); // Import your JWT middle
 /**
  * @swagger
  * /tasks:
+ *   post:
+ *     summary: Creates a new task.
+ *     description: Creates a new task with the given title and status for the authenticated user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *             properties:
+ *               title:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *                 default: 'To-Do'
+ *                 description: Status of the task, defaults to 'To-Do'
+ *     responses:
+ *       201:
+ *         description: Task created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       400:
+ *         description: Invalid input provided.
+ */
+
+// Create a new task
+router.post('/', authenticateToken, async (req, res) => {
+    const { title } = req.body;
+    if (!title) {
+        return res.status(400).json({ message: "Task title is required" });
+    }
+
+    try {
+        const newTask = new Task({
+            title: title,
+            user: req.user.id  
+        });
+        await newTask.save();
+        res.status(201).json(newTask);
+    } catch (error) {
+        console.error('Error creating task:', error);
+        res.status(500).json({ message: "Error creating task" });
+    }
+});
+
+
+/**
+ * @swagger
+ * /tasks:
  *   get:
  *     summary: Returns a list of tasks.
  *     description: Retrieve a list of tasks based on the current user's context.
@@ -33,27 +86,6 @@ const authenticateToken = require('./authMiddleware'); // Import your JWT middle
  *           default: 'To-Do'
  */
 
-
-// Create a new task
-router.post('/', authenticateToken, async (req, res) => {
-    const { title } = req.body;
-    if (!title) {
-        return res.status(400).json({ message: "Task title is required" });
-    }
-
-    try {
-        const newTask = new Task({
-            title: title,
-            user: req.user.id  
-        });
-        await newTask.save();
-        res.status(201).json(newTask);
-    } catch (error) {
-        console.error('Error creating task:', error);
-        res.status(500).json({ message: "Error creating task" });
-    }
-});
-
 // Get all tasks
 router.get('/', authenticateToken, async (req, res) => {
     try {
@@ -64,6 +96,44 @@ router.get('/', authenticateToken, async (req, res) => {
         res.status(500).json({ message: "Error fetching tasks" });
     }
 });
+
+
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   put:
+ *     summary: Updates a specific task.
+ *     description: Updates the task with the specified ID for the authenticated user.
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         description: The ID of the task to update.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The new title of the task.
+ *               status:
+ *                 type: string
+ *                 description: The new status of the task.
+ *     responses:
+ *       200:
+ *         description: Task updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       404:
+ *         description: Task not found.
+ */
 
 // Update a task
 router.put('/:id', authenticateToken, async (req, res) => {
@@ -79,6 +149,27 @@ router.put('/:id', authenticateToken, async (req, res) => {
         res.status(500).json({ message: "Error updating task" });
     }
 });
+
+
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   delete:
+ *     summary: Deletes a specific task.
+ *     description: Deletes the task with the specified ID if it belongs to the authenticated user.
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         description: The ID of the task to delete.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Task deleted successfully.
+ *       404:
+ *         description: Task not found.
+ */
 
 // Delete a task
 router.delete('/:taskId', authenticateToken, async (req, res) => {
