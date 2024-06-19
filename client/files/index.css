@@ -26,6 +26,17 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 1000px) {
+    .container {
+        flex-direction: column; /* Stack boxes vertically on smaller screens */
+        height: auto; /* Passt die Höhe automatisch an die gestapelten Boxen an */
+    }
+    .box {
+        margin: 10px 0; /* Adjust margin for vertical stacking */
+    }
+}
+
+/* Responsive Design */
 @media (max-width: 600px) {
     .container {
         flex-direction: column; /* Stack boxes vertically on smaller screens */
